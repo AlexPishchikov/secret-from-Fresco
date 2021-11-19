@@ -1,60 +1,82 @@
 import sys
-from pathlib import Path
 
 import csv
-import re
+import random
 
-from PyQt5.Qt import QMainWindow, QDialog, QApplication
+from PyQt5.Qt import QMainWindow, QDialog, QApplication, QFileDialog
 from PyQt5 import uic, QtWidgets, QtGui
 from PyQt5.QtCore import QSize, Qt, QTimer
 from PyQt5.QtWidgets import QLineEdit, QTableWidgetItem, QDialog, QDialogButtonBox, QDesktopWidget
 from PyQt5.QtGui import QKeyEvent, QPixmap, QFont, QFontDatabase
+
+def calculate_time(rating) -> str:
+    return str(rating)
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui/main.ui', self)
-        self.plus = []
+        self.rating = dict()
+        self.questions = list()
+        self.file_path = str()
         self.load_table('[Рейтинг] 1 семестр 2021 - Диф. Уравнения.csv')
-        pixmap = QPixmap('fresco.png')
-        self.img_label.setPixmap(pixmap)
+        self.img_label.setPixmap(QPixmap('fresco.png'))
         self.time_label.setStyleSheet('color: rgb(255, 255, 255);')
-        self.button.clicked.connect(lambda: self.set_time_label())
-        self.button.setAutoDefault(True)
-        self.name.returnPressed.connect(self.button.click)
+        self.question_label.setWordWrap(True)
+        self.question_label.setStyleSheet('color: rgb(255, 255, 255);')
+        self.set_question_button.clicked.connect(self.generate_secret)
+        self.choose_file_button.clicked.connect(self.choose_file)
 
-    def load_table(self, name):
-        with open(name, encoding="utf8") as csvfile:
-            first_col = str()
-            temp_reader = csv.reader(csvfile)
+    def load_table(self, file_name): # TODO: google sheets API
+        with open(file_name, encoding="utf8") as csv_file:
+            names_col = str()
+            temp_reader = csv.reader(csv_file)
             for row in temp_reader:
-                first_col = row[0]
+                names_col = row[0]
                 break
-        csvfile.close()
+        csv_file.close()
 
-        with open(name, encoding="utf8") as csvfile:
-            reader = csv.DictReader(csvfile)
+        with open(file_name, encoding="utf8") as csv_file:
+            reader = csv.DictReader(csv_file)
             for element in reader:
-                student_name = element[first_col].strip()
-                emoji_pattern = re.compile("["
-                    u"\U0001F600-\U0001F64F"
-                    u"\U0001F300-\U0001F5FF"
-                    u"\U0001F680-\U0001F6FF"
-                    u"\U0001F1E0-\U0001F1FF"
-                           "]+", flags=re.UNICODE)
-                student_name = emoji_pattern.sub(r'', student_name)
-                self.plus.append([student_name.strip().upper(), element['Промежуточный рейтинг']])
-        csvfile.close()
+                if element['Промежуточный рейтинг'] == '':
+                    continue
+                self.rating[element[names_col].strip()] = int(element['Промежуточный рейтинг'])
+                self.name_combo_box.addItem(element[names_col].strip())
+        csv_file.close()
 
     def set_time_label(self):
-        for i in range(len(self.plus)):
-            if self.plus[i][0] == self.name.text().upper():
-                self.time_label.setText(self.plus[i][1])
-                break
-            self.time_label.setText('-1')
+        self.time_label.setText(calculate_time(self.rating[self.name_combo_box.currentText()]))
+
+    def set_question_label(self):
+        if len(self.questions) == 0:
+            self.question_label.setText("Ещё вопросы?")
+            return
+        self.question_label.setText(str(self.questions.pop()))
+        self.questions_count_label.setText("Осталось вопросов: " + str(len(self.questions)))
+
+    def generate_secret(self):
+        if self.name_combo_box.currentText() != 'Студент':
+            self.set_time_label()
+            self.set_question_label()
+
+    def choose_file(self):
+        self.questions = list()
+        self.file_path = QFileDialog.getOpenFileName(self, "Выбрать файл  с вопросами", ".", "TeX(*.tex);;")
+        self.file_path = str(self.file_path[0])
+        self.import_questions_from_TeX()
+        self.questions_count_label.setText("Осталось вопросов: " + str(len(self.questions)))
+    
+    def import_questions_from_TeX(self):
+        questions_file = open(self.file_path, "r")
+        for line in questions_file:
+            self.questions.append(line.split('%')[0].replace('$', '').strip() + '\n')
+        random.shuffle(self.questions)
+        questions_file.close()
 
 
+random.seed()
 app = QApplication(sys.argv)
 main = MainWindow()
 main.show()
