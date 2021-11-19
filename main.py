@@ -1,13 +1,11 @@
+import os
 import sys
-
 import csv
 import random
 
-from PyQt5.Qt import QMainWindow, QDialog, QApplication, QFileDialog
-from PyQt5 import uic, QtWidgets, QtGui
-from PyQt5.QtCore import QSize, Qt, QTimer
-from PyQt5.QtWidgets import QLineEdit, QTableWidgetItem, QDialog, QDialogButtonBox, QDesktopWidget
-from PyQt5.QtGui import QKeyEvent, QPixmap, QFont, QFontDatabase
+from PyQt5 import uic
+from PyQt5.Qt import QMainWindow, QApplication, QFileDialog
+from PyQt5.QtGui import QPixmap
 
 def calculate_time(rating) -> str:
     return str(rating)
@@ -20,7 +18,7 @@ class MainWindow(QMainWindow):
         self.rating = dict()
         self.questions = list()
         self.file_path = str()
-        self.load_table('[Рейтинг] 1 семестр 2021 - Диф. Уравнения.csv')
+        self.load_table()
         self.img_label.setPixmap(QPixmap('fresco.png'))
         self.time_label.setStyleSheet('color: rgb(255, 255, 255);')
         self.question_label.setWordWrap(True)
@@ -28,7 +26,10 @@ class MainWindow(QMainWindow):
         self.set_question_button.clicked.connect(self.generate_secret)
         self.choose_file_button.clicked.connect(self.choose_file)
 
-    def load_table(self, file_name): # TODO: google sheets API
+    def load_table(self):
+        file_name = 'table.csv'
+        os.system("wget --no-check-certificate --output-document=" + file_name + " 'https://docs.google.com/spreadsheet/ccc?key=1KmEtA7ARv2Giq68jhrRyx5V2YWAdmz2UM6Y-T8gLjUM&output=csv'")
+        
         with open(file_name, encoding="utf8") as csv_file:
             names_col = str()
             temp_reader = csv.reader(csv_file)
@@ -45,6 +46,7 @@ class MainWindow(QMainWindow):
                 self.rating[element[names_col].strip()] = int(element['Промежуточный рейтинг'])
                 self.name_combo_box.addItem(element[names_col].strip())
         csv_file.close()
+        os.system('rm ' + file_name)
 
     def set_time_label(self):
         self.time_label.setText(calculate_time(self.rating[self.name_combo_box.currentText()]))
