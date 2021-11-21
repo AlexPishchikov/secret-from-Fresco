@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>700</width>
-    <height>547</height>
+    <height>645</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -76,11 +76,82 @@
       <x>10</x>
       <y>470</y>
       <width>681</width>
-      <height>71</height>
+      <height>170</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="1">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="not_empty_cells_count_spin_box">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>3</number>
+         </property>
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="not_empty_cells_count_label">
+         <property name="text">
+          <string>Непустых ячеек</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="cells_count_spin_box">
+         <property name="minimum">
+          <number>2</number>
+         </property>
+         <property name="maximum">
+          <number>18</number>
+         </property>
+         <property name="value">
+          <number>3</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="cells_count_label">
+         <property name="text">
+          <string>Всего ячеек</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="set_question_button">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>60</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Сгенерировать загадку</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="choose_file_button">
+       <property name="text">
+        <string>Выбрать файл с вопросами</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="roulette_button">
+       <property name="text">
+        <string>Рулетка</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QComboBox" name="name_combo_box">
@@ -100,19 +171,12 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="choose_file_button">
-           <property name="text">
-            <string>Выбрать файл</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="QPushButton" name="set_question_button">
+     <item row="2" column="0">
+      <widget class="QPushButton" name="refresh_questions_button">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -120,7 +184,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Сгенерировать загадку</string>
+        <string>Обновить вопросы</string>
        </property>
       </widget>
      </item>
