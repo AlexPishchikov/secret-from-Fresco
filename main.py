@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         uic.loadUi('ui/main.ui', self)
         self.setFixedSize(self.size())
-        self.const_upper_label.setFont(QFont("Gill Sans Nova", 32))
+        self.const_upper_label.setFont(QFont("Gill Sans Nova", 44))
         self.const_upper_label.setStyleSheet('color: rgb(255, 255, 255);')
         self.const_lower_label.setFont(QFont("Gill Sans Nova", 32))
         self.const_lower_label.setStyleSheet('color: rgb(255, 255, 255);')
