@@ -5,7 +5,7 @@ import random
 
 from PyQt5 import uic, QtCore, QtWidgets
 from PyQt5.Qt import QMainWindow, QApplication, QFileDialog, QDialog
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QFont
 
 roulette = None
 
@@ -15,11 +15,28 @@ not_empty_cells_count = int()
 def calculate_time(rating) -> str:
     return str(rating)
 
+def last_letter(rating) -> str:
+    last_letter = ''
+    if str(rating)[-1] == '1':
+        last_letter = 'а'
+    if int(str(rating)[-1]) in range(2, 5):
+        last_letter = 'ы'
+    if 11 <= int(rating) <= 19:
+        last_letter = ''
+    return last_letter
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui/main.ui', self)
+        self.setFixedSize(self.size())
+        self.const_upper_label.setFont(QFont("Gill Sans Nova", 28))
+        self.const_upper_label.setStyleSheet('color: rgb(255, 255, 255);')
+        self.const_lower_label.setFont(QFont("Gill Sans Nova", 22))
+        self.const_lower_label.setStyleSheet('color: rgb(255, 255, 255);')
+        self.const_upper_label.hide()
+        self.const_lower_label.hide()
         self.rating = dict()
         self.questions = list()
         self.file_path = str()
@@ -52,14 +69,15 @@ class MainWindow(QMainWindow):
             for element in reader:
                 if element['Промежуточный рейтинг'] == '':
                     continue
-
                 self.rating[element[names_col].strip()] = int(element['Промежуточный рейтинг'])
                 self.name_combo_box.addItem(element[names_col].strip())
+
         csv_file.close()
         os.system('rm ' + file_name)
 
     def set_time_label(self):
-        self.time_label.setText(calculate_time(self.rating[self.name_combo_box.currentText()]))
+        current_rating = self.rating[self.name_combo_box.currentText()]
+        self.time_label.setText(calculate_time(current_rating) + " секунд" + last_letter(current_rating))
 
     def set_question_label(self):
         if len(self.questions) == 0:
@@ -71,6 +89,8 @@ class MainWindow(QMainWindow):
 
     def generate_secret(self):
         if self.name_combo_box.currentText() != 'Студент':
+            self.const_upper_label.show()
+            self.const_lower_label.show()
             self.set_time_label()
             self.set_question_label()
 
@@ -135,10 +155,9 @@ class RouletteDialog(QDialog):
             self.roulette_buttons.append(roulette_button)
 
             max_x = max(max_x, self.button_margin * (1 + i % 3) + self.button_size * (1 + i % 3) + self.button_margin)
-            max_y = max(max_y,  self.button_margin * (1 + i // 3) + self.button_size * (1 + i // 3) + self.button_margin)
+            max_y = max(max_y, self.button_margin * (1 + i // 3) + self.button_size * (1 + i // 3) + self.button_margin)
             
-        self.resize(max_x, max_y)
-
+        self.setFixedSize(max_x, max_y)
 
     def shoot(self, button_number):
         global not_empty_cells_count, cells_count
@@ -156,13 +175,6 @@ class RouletteDialog(QDialog):
         if button_number not in self.not_empty_cells:
             self.roulette_buttons[button_number].setStyleSheet('background: rgb(150, 0, 0);')
 
-    def close_dialog(self):
-        for button in self.roulette_buttons:
-            button.setEnabled(True)
-            button.setStyleSheet('background: rgb(255, 255, 255);')
-
-        roulette.close()
-
     def i_hate_python(self, i):
         return lambda: self.shoot(i)
 
@@ -170,6 +182,8 @@ class RouletteDialog(QDialog):
 random.seed()
 
 app = QApplication(sys.argv)
+app.setFont(QFont("Gill Sans Nova", 11))
+
 main = MainWindow()
 main.show()
 

@@ -32,15 +32,15 @@
      <rect>
       <x>20</x>
       <y>400</y>
-      <width>31</width>
+      <width>231</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
+      <pointsize>22</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -59,8 +59,8 @@
     <property name="font">
      <font>
       <pointsize>18</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
+      <weight>50</weight>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -189,6 +189,32 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="const_upper_label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>501</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Загадка от Жака Фреско</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="const_lower_label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>370</y>
+      <width>441</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>На размышление даётся</string>
+    </property>
    </widget>
   </widget>
  </widget>
