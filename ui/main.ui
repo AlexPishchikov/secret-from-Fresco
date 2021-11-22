@@ -31,9 +31,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>400</y>
+      <y>410</y>
       <width>231</width>
-      <height>41</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="font">
@@ -51,9 +51,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>90</y>
+      <y>110</y>
       <width>420</width>
-      <height>261</height>
+      <height>241</height>
      </rect>
     </property>
     <property name="font">
@@ -196,7 +196,7 @@
       <x>30</x>
       <y>30</y>
       <width>501</width>
-      <height>51</height>
+      <height>71</height>
      </rect>
     </property>
     <property name="text">
@@ -209,7 +209,7 @@
       <x>30</x>
       <y>370</y>
       <width>441</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">

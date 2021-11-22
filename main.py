@@ -5,7 +5,7 @@ import random
 
 from PyQt5 import uic, QtCore, QtWidgets
 from PyQt5.Qt import QMainWindow, QApplication, QFileDialog, QDialog
-from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtGui import QPixmap, QFont, QFontDatabase
 
 roulette = None
 
@@ -31,9 +31,9 @@ class MainWindow(QMainWindow):
         super().__init__()
         uic.loadUi('ui/main.ui', self)
         self.setFixedSize(self.size())
-        self.const_upper_label.setFont(QFont("Gill Sans Nova", 44))
+        self.const_upper_label.setFont(QFont(lobster_font, 32))
         self.const_upper_label.setStyleSheet('color: rgb(255, 255, 255);')
-        self.const_lower_label.setFont(QFont("Gill Sans Nova", 32))
+        self.const_lower_label.setFont(QFont(lobster_font, 24))
         self.const_lower_label.setStyleSheet('color: rgb(255, 255, 255);')
         self.const_upper_label.hide()
         self.const_lower_label.hide()
@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.questions = list()
         self.file_path = str()
         self.load_table()
-        self.img_label.setPixmap(QPixmap('fresco.png'))
+        self.img_label.setPixmap(QPixmap('res/images/main_background.png'))
         self.time_label.setStyleSheet('color: rgb(255, 255, 255);')
         self.question_label.setWordWrap(True)
         self.question_label.setStyleSheet('color: rgb(255, 255, 255);')
@@ -100,11 +100,11 @@ class MainWindow(QMainWindow):
         self.import_questions_from_TeX()
 
     def import_questions_from_TeX(self):
-        self.questions = list()
         if self.file_path == '':
             return
 
         questions_file = open(self.file_path, "r")
+        self.questions = list()
         for line in questions_file:
             self.questions.append(line.split('%')[0].replace('$', '').strip() + '\n')
 
@@ -182,7 +182,9 @@ class RouletteDialog(QDialog):
 random.seed()
 
 app = QApplication(sys.argv)
-app.setFont(QFont("Gill Sans Nova", 11))
+font_id = QFontDatabase.addApplicationFont('res/fonts/Lobster-Regular.ttf')
+lobster_font = QFontDatabase.applicationFontFamilies(font_id)[0]
+app.setFont(QFont(lobster_font, 11))
 
 main = MainWindow()
 main.show()
