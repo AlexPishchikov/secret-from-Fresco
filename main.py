@@ -39,6 +39,8 @@ class MainWindow(QMainWindow):
         self.const_upper_label.setStyleSheet('color: rgb(255, 255, 255);')
         self.const_lower_label.setFont(QFont(lobster_font, 24))
         self.const_lower_label.setStyleSheet('color: rgb(255, 255, 255);')
+        self.time_left_label.setFont(QFont(lobster_font, 16))
+        self.time_left_label.setStyleSheet('color: rgb(255, 255, 255);')
         self.const_upper_label.hide()
         self.const_lower_label.hide()
         self.rating = dict()
@@ -57,7 +59,10 @@ class MainWindow(QMainWindow):
         self.refresh_questions_button.clicked.connect(self.import_questions_from_TeX)
         self.roulette_button.clicked.connect(self.show_roulette_dialog)
         self.cells_count_spin_box.valueChanged.connect(self.cells_count_spin_box_changed)
-        self.background_timer = QTimer(self, timeout = lambda: self.img_label.setPixmap(self.evil_fresco))
+
+        self.time_interval = 100
+        self.time_left_timer = QTimer(self, timeout = self.update_time_left_label)
+        self.time_left_timer.setInterval(self.time_interval)
 
     def load_table(self):
         file_name = 'table.csv'
@@ -98,15 +103,14 @@ class MainWindow(QMainWindow):
 
     def generate_secret(self):
         if self.name_combo_box.currentText() != 'Студент':
-            self.background_timer.stop()
+            self.time_left_timer.stop()
             self.const_upper_label.show()
             self.const_lower_label.show()
             self.set_time_label()
             self.set_question_label()
             self.img_label.setPixmap(self.good_fresco)
-            self.background_timer = QTimer(self, timeout = lambda: self.img_label.setPixmap(self.evil_fresco))
-            self.background_timer.setSingleShot(True)
-            self.background_timer.start(1000 * int(self.current_time))
+            self.time_left_label.setText(self.current_time + '.0')
+            self.time_left_timer.start()
 
     def choose_file(self):
         self.file_path = QFileDialog.getOpenFileName(self, "Выбрать файл  с вопросами", ".", "TeX(*.tex);;")
@@ -125,6 +129,14 @@ class MainWindow(QMainWindow):
         random.shuffle(self.questions)
         questions_file.close()
         self.questions_count_label.setText("Осталось вопросов: " + str(len(self.questions)))
+
+    def update_time_left_label(self):
+        current_time = round(float(self.time_left_label.text()) - 0.1, 1)
+        self.time_left_label.setText(str(current_time))
+        if current_time == 0 or float(self.time_left_label.text()) <= 0:
+            self.time_left_label.setText('0')
+            self.img_label.setPixmap(self.evil_fresco)
+            self.time_left_timer.stop()
 
     def cells_count_spin_box_changed(self):
         self.not_empty_cells_count_spin_box.setMaximum(self.cells_count_spin_box.value())
