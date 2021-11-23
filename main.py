@@ -36,29 +36,37 @@ class MainWindow(QMainWindow):
         uic.loadUi('ui/main.ui', self)
         self.setFixedSize(self.size())
         self.const_upper_label.setFont(QFont(lobster_font, 32))
-        self.const_upper_label.setStyleSheet('color: rgb(255, 255, 255);')
         self.const_lower_label.setFont(QFont(lobster_font, 24))
-        self.const_lower_label.setStyleSheet('color: rgb(255, 255, 255);')
+        self.time_label.setFont(QFont(lobster_font, 24))
+        self.question_label.setFont(QFont(lobster_font, 20))
         self.time_left_label.setFont(QFont(lobster_font, 16))
+        self.const_upper_label.setStyleSheet('color: rgb(255, 255, 255);')
+        self.const_lower_label.setStyleSheet('color: rgb(255, 255, 255);')
         self.time_left_label.setStyleSheet('color: rgb(255, 255, 255);')
+        self.time_label.setStyleSheet('color: rgb(255, 255, 255);')
+        self.question_label.setStyleSheet('color: rgb(255, 255, 255);')
+        self.question_label.setWordWrap(True)
+
         self.const_upper_label.hide()
         self.const_lower_label.hide()
+
         self.rating = dict()
         self.questions = list()
         self.file_path = str()
         self.current_rating = 0
+
         self.load_table()
+
         self.good_fresco = QPixmap('res/images/good_fresco.png')
         self.evil_fresco = QPixmap('res/images/evil_fresco.png')
         self.img_label.setPixmap(self.good_fresco)
-        self.time_label.setStyleSheet('color: rgb(255, 255, 255);')
-        self.question_label.setWordWrap(True)
-        self.question_label.setStyleSheet('color: rgb(255, 255, 255);')
+        
         self.set_question_button.clicked.connect(self.generate_secret)
         self.choose_file_button.clicked.connect(self.choose_file)
         self.refresh_questions_button.clicked.connect(self.import_questions_from_TeX)
         self.roulette_button.clicked.connect(self.show_roulette_dialog)
         self.cells_count_spin_box.valueChanged.connect(self.cells_count_spin_box_changed)
+        self.start_timer_button.clicked.connect(self.start_timer)
 
         self.time_interval = 100
         self.time_left_timer = QTimer(self, timeout = self.update_time_left_label)
@@ -103,14 +111,13 @@ class MainWindow(QMainWindow):
 
     def generate_secret(self):
         if self.name_combo_box.currentText() != 'Студент':
-            self.time_left_timer.stop()
-            self.const_upper_label.show()
-            self.const_lower_label.show()
             self.set_time_label()
             self.set_question_label()
-            self.img_label.setPixmap(self.good_fresco)
+            self.time_left_timer.stop()
             self.time_left_label.setText(self.current_time + '.0')
-            self.time_left_timer.start()
+            self.img_label.setPixmap(self.good_fresco)
+            self.const_upper_label.show()
+            self.const_lower_label.show()
 
     def choose_file(self):
         self.file_path = QFileDialog.getOpenFileName(self, "Выбрать файл  с вопросами", ".", "TeX(*.tex);;")
@@ -129,6 +136,12 @@ class MainWindow(QMainWindow):
         random.shuffle(self.questions)
         questions_file.close()
         self.questions_count_label.setText("Осталось вопросов: " + str(len(self.questions)))
+
+    def start_timer(self):
+        self.time_left_timer.stop()
+        self.img_label.setPixmap(self.good_fresco)
+        self.time_left_label.setText(self.current_time + '.0')
+        self.time_left_timer.start()
 
     def update_time_left_label(self):
         current_time = round(float(self.time_left_label.text()) - 0.1, 1)
@@ -210,7 +223,6 @@ random.seed()
 app = QApplication(sys.argv)
 font_id = QFontDatabase.addApplicationFont('res/fonts/Lobster-Regular.ttf')
 lobster_font = QFontDatabase.applicationFontFamilies(font_id)[0]
-app.setFont(QFont(lobster_font, 11))
 
 main = MainWindow()
 main.show()

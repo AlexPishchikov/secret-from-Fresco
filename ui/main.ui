@@ -124,19 +124,6 @@
        </item>
       </layout>
      </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="set_question_button">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>60</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Сгенерировать загадку</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QPushButton" name="choose_file_button">
        <property name="text">
@@ -187,6 +174,36 @@
         <string>Обновить вопросы</string>
        </property>
       </widget>
+     </item>
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="set_question_button">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Сгенерировать загадку</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="start_timer_button">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Запустить таймер</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
