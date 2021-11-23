@@ -3,7 +3,8 @@ import sys
 import csv
 import random
 
-from PyQt5 import uic, QtCore, QtWidgets
+from PyQt5 import uic, QtWidgets
+from PyQt5.QtCore import QTimer, QSize, QRect
 from PyQt5.Qt import QMainWindow, QApplication, QFileDialog, QDialog
 from PyQt5.QtGui import QPixmap, QFont, QFontDatabase
 
@@ -40,8 +41,11 @@ class MainWindow(QMainWindow):
         self.rating = dict()
         self.questions = list()
         self.file_path = str()
+        self.current_rating = 0
         self.load_table()
-        self.img_label.setPixmap(QPixmap('res/images/main_background.png'))
+        self.good_fresco = QPixmap('res/images/good_fresco.png')
+        self.evil_fresco = QPixmap('res/images/evil_fresco.png')
+        self.img_label.setPixmap(self.good_fresco)
         self.time_label.setStyleSheet('color: rgb(255, 255, 255);')
         self.question_label.setWordWrap(True)
         self.question_label.setStyleSheet('color: rgb(255, 255, 255);')
@@ -50,6 +54,7 @@ class MainWindow(QMainWindow):
         self.refresh_questions_button.clicked.connect(self.import_questions_from_TeX)
         self.roulette_button.clicked.connect(self.show_roulette_dialog)
         self.cells_count_spin_box.valueChanged.connect(self.cells_count_spin_box_changed)
+        self.background_timer = QTimer(self, timeout = lambda: self.img_label.setPixmap(self.evil_fresco))
 
     def load_table(self):
         file_name = 'table.csv'
@@ -76,8 +81,8 @@ class MainWindow(QMainWindow):
         os.system('rm ' + file_name)
 
     def set_time_label(self):
-        current_rating = self.rating[self.name_combo_box.currentText()]
-        self.time_label.setText(calculate_time(current_rating) + " секунд" + last_letter(current_rating))
+        self.current_rating = self.rating[self.name_combo_box.currentText()]
+        self.time_label.setText(calculate_time(self.current_rating) + " секунд" + last_letter(self.current_rating))
 
     def set_question_label(self):
         if len(self.questions) == 0:
@@ -89,10 +94,15 @@ class MainWindow(QMainWindow):
 
     def generate_secret(self):
         if self.name_combo_box.currentText() != 'Студент':
+            self.background_timer.stop()
             self.const_upper_label.show()
             self.const_lower_label.show()
             self.set_time_label()
             self.set_question_label()
+            self.img_label.setPixmap(self.good_fresco)
+            self.background_timer = QTimer(self, timeout = lambda: self.img_label.setPixmap(self.evil_fresco))
+            self.background_timer.setSingleShot(True)
+            self.background_timer.start(1000 * int(self.current_rating))
 
     def choose_file(self):
         self.file_path = QFileDialog.getOpenFileName(self, "Выбрать файл  с вопросами", ".", "TeX(*.tex);;")
@@ -145,8 +155,8 @@ class RouletteDialog(QDialog):
             ]
 
             roulette_button = QtWidgets.QPushButton(self)
-            roulette_button.setMinimumSize(QtCore.QSize(self.button_size, self.button_size))
-            roulette_button.setGeometry(QtCore.QRect(coords[0], coords[1], self.button_size, self.button_size))
+            roulette_button.setMinimumSize(QSize(self.button_size, self.button_size))
+            roulette_button.setGeometry(QRect(coords[0], coords[1], self.button_size, self.button_size))
             roulette_button.setObjectName(str(i))
             roulette_button.setText("")
 
