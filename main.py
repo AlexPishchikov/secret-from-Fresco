@@ -4,7 +4,7 @@ import csv
 import random
 
 from PyQt5 import uic, QtWidgets
-from PyQt5.QtCore import QTimer, QSize, QRect
+from PyQt5.QtCore import QTimer, QSize, QRect, QDir
 from PyQt5.Qt import QMainWindow, QApplication, QFileDialog, QDialog
 from PyQt5.QtGui import QPixmap, QFont, QFontDatabase
 
@@ -221,7 +221,7 @@ class RouletteDialog(QDialog):
 random.seed()
 
 app = QApplication(sys.argv)
-font_id = QFontDatabase.addApplicationFont('res/fonts/Lobster-Regular.ttf')
+font_id = QFontDatabase.addApplicationFont(QDir.currentPath() + '/res/fonts/Lobster-Regular.ttf')
 lobster_font = QFontDatabase.applicationFontFamilies(font_id)[0]
 
 main = MainWindow()
