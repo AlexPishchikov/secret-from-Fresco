@@ -14,7 +14,10 @@ cells_count = int()
 not_empty_cells_count = int()
 
 def calculate_time(rating) -> str:
-    return str(rating)
+    time = int(rating)
+    if time < 0:
+        time = 0
+    return str(time)
 
 def last_letter(rating) -> str:
     last_letter = ''
@@ -82,7 +85,8 @@ class MainWindow(QMainWindow):
 
     def set_time_label(self):
         self.current_rating = self.rating[self.name_combo_box.currentText()]
-        self.time_label.setText(calculate_time(self.current_rating) + " секунд" + last_letter(self.current_rating))
+        self.current_time = calculate_time(self.current_rating)
+        self.time_label.setText(self.current_time + " секунд" + last_letter(self.current_time))
 
     def set_question_label(self):
         if len(self.questions) == 0:
@@ -102,7 +106,7 @@ class MainWindow(QMainWindow):
             self.img_label.setPixmap(self.good_fresco)
             self.background_timer = QTimer(self, timeout = lambda: self.img_label.setPixmap(self.evil_fresco))
             self.background_timer.setSingleShot(True)
-            self.background_timer.start(1000 * int(self.current_rating))
+            self.background_timer.start(1000 * int(self.current_time))
 
     def choose_file(self):
         self.file_path = QFileDialog.getOpenFileName(self, "Выбрать файл  с вопросами", ".", "TeX(*.tex);;")
