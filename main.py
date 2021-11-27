@@ -54,6 +54,7 @@ class MainWindow(QMainWindow):
         self.questions = list()
         self.file_path = str()
         self.current_rating = 0
+        self.current_time = None
 
         self.load_table()
 
@@ -138,6 +139,8 @@ class MainWindow(QMainWindow):
         self.questions_count_label.setText("Осталось вопросов: " + str(len(self.questions)))
 
     def start_timer(self):
+        if self.current_time is None:
+            return
         self.time_left_timer.stop()
         self.img_label.setPixmap(self.good_fresco)
         self.time_left_label.setText(self.current_time + '.0')
