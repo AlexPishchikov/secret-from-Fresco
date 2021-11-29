@@ -76,7 +76,7 @@
       <x>10</x>
       <y>470</y>
       <width>681</width>
-      <height>170</height>
+      <height>172</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -191,17 +191,34 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="start_timer_button">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>60</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Запустить таймер</string>
-         </property>
-        </widget>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QPushButton" name="start_timer_button">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Запустить таймер</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="stop_timer_button">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Остановить таймер</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>

@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
         self.roulette_button.clicked.connect(self.show_roulette_dialog)
         self.cells_count_spin_box.valueChanged.connect(self.cells_count_spin_box_changed)
         self.start_timer_button.clicked.connect(self.start_timer)
+        self.stop_timer_button.clicked.connect(self.stop_timer)
 
         self.time_interval = 100
         self.time_left_timer = QTimer(self, timeout = self.update_time_left_label)
@@ -146,6 +147,9 @@ class MainWindow(QMainWindow):
         self.time_left_label.setText(self.current_time + '.0')
         self.time_left_timer.start()
 
+    def stop_timer(self):
+        self.time_left_timer.stop()
+
     def update_time_left_label(self):
         current_time = round(float(self.time_left_label.text()) - 0.1, 1)
         self.time_left_label.setText(str(current_time))
@@ -190,8 +194,8 @@ class RouletteDialog(QDialog):
             roulette_button.setMinimumSize(QSize(self.button_size, self.button_size))
             roulette_button.setGeometry(QRect(coords[0], coords[1], self.button_size, self.button_size))
             roulette_button.setObjectName(str(i))
-            roulette_button.setText("")
-
+            roulette_button.setFont(QFont(lobster_font, 24))
+            roulette_button.setText(str(i + 1))
             roulette_button.clicked.connect(self.i_hate_python(i))
             
             self.roulette_buttons.append(roulette_button)
